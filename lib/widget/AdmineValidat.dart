@@ -152,7 +152,8 @@ class _AdminValidState extends State<AdminValid> {
                               student.status == 'Attend' ||
                               student.status == 'Reject')
                           .toList();
-                      admin.generateAndPrintPdf(filteredStudents);
+                      admin.generateAndPrintPdf(
+                          filteredStudents, selectscholarship);
                     },
                     color: primary,
                     option: 'Print List ',

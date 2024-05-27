@@ -148,7 +148,8 @@ class _StudentValidState extends State<StudentValid> {
                               student.status == 'Attend' ||
                               student.status == 'Reject')
                           .toList();
-                      _studentServiceList.generateAndPrintPdf(filteredStudents);
+                      _studentServiceList.generateAndPrintPdf(
+                          filteredStudents, selectscholarship);
                     },
                     color: primary,
                     option: 'Print List ',
