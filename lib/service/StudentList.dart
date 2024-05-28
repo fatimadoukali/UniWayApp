@@ -5,7 +5,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
 class StudentServiceList {
-  Future<void> generateAndPrintPdf(List<Studentmodel> students) async {
+  Future<void> generateAndPrintPdf(
+      List<Studentmodel> students, String scholar) async {
     final pdf = pw.Document();
     final imageData = await rootBundle.load('asset/image/logo7.png');
     final image = pw.MemoryImage(imageData.buffer.asUint8List());

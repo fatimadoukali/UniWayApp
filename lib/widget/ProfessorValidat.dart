@@ -152,7 +152,8 @@ class _ProfessorValidState extends State<ProfessorValid> {
                               student.status == 'Attend' ||
                               student.status == 'Reject')
                           .toList();
-                      prof.generateAndPrintPdf(filteredStudents);
+                      prof.generateAndPrintPdf(
+                          filteredStudents, selectscholarship);
                     },
                     color: primary,
                     option: 'Print List ',

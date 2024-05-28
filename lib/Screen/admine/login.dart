@@ -25,86 +25,85 @@ class _LoginAdminState extends State<LoginAdmin> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
- Future<void> _login() async {
-  if (!formKey.currentState!.validate() || _loading) {
-    return;
-  }
-  setState(() {
-    _loading = true; // Show loading indicator
-  });
-  try {
-    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('employees')
-        .where('job', isEqualTo: 'Administrator')
-        .get();
-
-    if (querySnapshot.docs.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("No employees with this title were found."),
-          backgroundColor: Colors.red,
-        ),
-      );
-      await _auth.signOut(); // Sign out the user
+  Future<void> _login() async {
+    if (!formKey.currentState!.validate() || _loading) {
       return;
     }
-
-    var employeeDoc = querySnapshot.docs.first;
-    var employeeData = employeeDoc.data() as Map<String, dynamic>;
-
-    if (employeeData['email'] != _emailController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("This employee is not the Admin"),
-          backgroundColor: Colors.red,
-        ),
-      );
-      await _auth.signOut(); // Sign out the user
-      return;
-    }
-
-    await _firestore.collection('users').doc(userCredential.user!.uid).set({
-      'email': _emailController.text,
-      'last_login': DateTime.now(),
-    });
-
-    Navigator.pushNamed(context, 'employee_management');
-  } on FirebaseAuthException catch (e) {
-    String errorMessage;
-    if (e.code == 'user-not-found') {
-      errorMessage = 'No user found for this email';
-    } else if (e.code == 'wrong-password') {
-      errorMessage = 'Incorrect password';
-    } else {
-      errorMessage = 'An error occurred while connecting';
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-        backgroundColor: Colors.red,
-      ),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('An Unexpected error occurred'),
-        backgroundColor: Colors.red,
-      ),
-    );
-    print('Erreur inattendue: $e');
-  } finally {
     setState(() {
-      _loading = false; // Hide loading indicator
+      _loading = true; // Show loading indicator
     });
-  }
-}
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
 
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('employees')
+          .where('job', isEqualTo: 'Administrator')
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("No employees with this title were found."),
+            backgroundColor: Colors.red,
+          ),
+        );
+        await _auth.signOut(); // Sign out the user
+        return;
+      }
+
+      // var employeeDoc = querySnapshot.docs.first;
+      // var employeeData = employeeDoc.data() as Map<String, dynamic>;
+
+      // if (employeeData['email'] != _emailController.text) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text("This employee is not the Admin"),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      //   await _auth.signOut(); // Sign out the user
+      //   return;
+      // }
+
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': _emailController.text,
+        'last_login': DateTime.now(),
+      });
+
+      Navigator.pushNamed(context, 'employee_management');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for this email';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Incorrect password';
+      } else {
+        errorMessage = 'An error occurred while connecting';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An Unexpected error occurred'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      print('Erreur inattendue: $e');
+    } finally {
+      setState(() {
+        _loading = false; // Hide loading indicator
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,8 @@ import 'package:printing/printing.dart';
 import 'package:uniwayapp/Model/adminstatoemodel.dart';
 
 class AdminServiceList {
-  Future<void> generateAndPrintPdf(List<AdminstratorsModele> students) async {
+  Future<void> generateAndPrintPdf(
+      List<AdminstratorsModele> students, String dcholar) async {
     final pdf = pw.Document();
     final imageData = await rootBundle.load('asset/image/logo7.png');
     final image = pw.MemoryImage(imageData.buffer.asUint8List());
